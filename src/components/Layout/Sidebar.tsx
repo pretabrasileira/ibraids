@@ -18,6 +18,7 @@ import {
   Tag,
   Award,
 } from "lucide-react"
+import { useEffect, useState } from "react"
 
 const entrepreneurMenuItems = [
   { to: "/dashboard", icon: Home, label: "Dashboard" },
@@ -54,6 +55,21 @@ const adminMenuItems = [
 
 export const Sidebar: React.FC = () => {
   const { user } = useAuth()
+  const [pendingReviews, setPendingReviews] = useState<number>(0)
+
+  useEffect(() => {
+    if (user?.role === "entrepreneur") {
+      const BOOKINGS_KEY = "ibraids_bookings"
+      const data = localStorage.getItem(BOOKINGS_KEY)
+      if (data) {
+        const bookings = JSON.parse(data)
+        const pendings = bookings.filter((b: any) => b.status === "completed" && (!b.entrepreneurRating || !b.entrepreneurReview))
+        setPendingReviews(pendings.length)
+      } else {
+        setPendingReviews(0)
+      }
+    }
+  }, [user])
 
   const getMenuItems = () => {
     switch (user?.role) {
@@ -75,7 +91,7 @@ export const Sidebar: React.FC = () => {
       <nav className="mt-8 px-4">
         <ul className="space-y-2">
           {menuItems.map((item) => (
-            <li key={item.to}>
+            <li key={item.to} className="relative">
               <NavLink
                 to={item.to}
                 className={({ isActive }) =>
@@ -88,6 +104,11 @@ export const Sidebar: React.FC = () => {
               >
                 <item.icon className="mr-3 h-5 w-5" />
                 {item.label}
+                {user?.role === "entrepreneur" && item.to === "/entrepreneur/evaluate-clients" && pendingReviews > 0 && (
+                  <span className="ml-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+                    {pendingReviews}
+                  </span>
+                )}
               </NavLink>
             </li>
           ))}
