@@ -8,7 +8,10 @@
     "price": 150.0,
     "duration": 180,
     "isActive": true,
-    "images": ["/placeholder.svg?height=200&width=300"]
+    "images": ["/placeholder.svg?height=200&width=300"],
+    "isSponsored": true,
+    "sponsoredType": "mensal",
+    "sponsoredUntil": "2024-07-31"
   },
   {
     "id": "2",
@@ -19,7 +22,8 @@
     "price": 120.0,
     "duration": 150,
     "isActive": true,
-    "images": ["/placeholder.svg?height=200&width=300"]
+    "images": ["/placeholder.svg?height=200&width=300"],
+    "isSponsored": false
   },
   {
     "id": "3",
@@ -30,6 +34,9 @@
     "price": 80.0,
     "duration": 60,
     "isActive": true,
-    "images": ["/placeholder.svg?height=200&width=300"]
+    "images": ["/placeholder.svg?height=200&width=300"],
+    "isSponsored": true,
+    "sponsoredType": "diário",
+    "sponsoredUntil": "2024-06-15"
   }
 ] 

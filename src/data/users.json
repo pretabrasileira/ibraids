@@ -10,6 +10,8 @@
     "avatar": "/placeholder.svg?height=100&width=100",
     "isActive": true,
     "createdAt": "2024-01-15",
+    "rating": 4.9,
+    "completedServices": 120,
     "addresses": [
       {
         "id": "a1",
