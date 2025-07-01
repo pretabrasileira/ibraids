@@ -4,36 +4,40 @@ import type { ServiceRequest, Entrepreneur, Service } from "../types";
 // Mock de bookings (importar do ScheduleService ou localStorage futuramente)
 import { mockEntrepreneurs, mockServices } from "../data/mocks"; // Ajuste o caminho conforme necessário
 
-// Simulação: importar bookings do escopo global (ScheduleService) ou localStorage
-let mockBookings: ServiceRequest[] = [];
+// Funções utilitárias para persistência
+const BOOKINGS_KEY = "ibraids_bookings";
+function getBookings(): ServiceRequest[] {
+  const data = localStorage.getItem(BOOKINGS_KEY);
+  if (data) return JSON.parse(data);
+  return [];
+}
+function setBookings(bookings: ServiceRequest[]) {
+  localStorage.setItem(BOOKINGS_KEY, JSON.stringify(bookings));
+}
 
 const getEntrepreneur = (id: string): Entrepreneur | undefined => mockEntrepreneurs.find(e => e.id === id);
 const getService = (id: string): Service | undefined => mockServices.find(s => s.id === id);
 
 const ServicesHistory: React.FC = () => {
-  const [bookings, setBookings] = useState<ServiceRequest[]>([]);
+  const [bookings, setBookingsState] = useState<ServiceRequest[]>([]);
   const [notifications, setNotifications] = useState<string[]>([]);
 
   useEffect(() => {
-    // Aqui você pode buscar do localStorage ou API futuramente
-    setBookings([...mockBookings]);
+    const loaded = getBookings();
+    setBookingsState(loaded);
     const now = new Date();
     const notifs: string[] = [];
-    mockBookings.forEach(b => {
+    loaded.forEach(b => {
       const sched = new Date(b.scheduledDate);
       const diffMs = sched.getTime() - now.getTime();
-      // Verifica quando o booking foi criado
       const created = new Date(b.createdAt);
       const createdDiff = sched.getTime() - created.getTime();
-      // Notificação 24h antes: só se o agendamento foi feito com mais de 24h de antecedência
       if (createdDiff > 24 * 60 * 60 * 1000 && sched > now && diffMs < 24 * 60 * 60 * 1000 && diffMs > 60 * 60 * 1000) {
         notifs.push(`Você tem um serviço agendado para ${sched.toLocaleString()}`);
       }
-      // Notificação 1h antes: sempre se confirmado e dentro da janela
       if (b.status === "confirmed" && sched > now && diffMs < 60 * 60 * 1000 && diffMs > 0) {
         notifs.push(`Lembrete: seu serviço confirmado começa em menos de 1 hora (${sched.toLocaleString()})`);
       }
-      // Se o agendamento foi feito com menos de 24h de antecedência, só notifica 1h antes (se confirmado)
       if (createdDiff <= 24 * 60 * 60 * 1000 && b.status === "confirmed" && sched > now && diffMs < 60 * 60 * 1000 && diffMs > 0) {
         // Já está coberto pela regra acima
       }
@@ -42,11 +46,12 @@ const ServicesHistory: React.FC = () => {
   }, []);
 
   const handleConfirm = (bookingId: string) => {
-    // Atualiza status para 'confirmed'
-    const idx = mockBookings.findIndex(b => b.id === bookingId);
+    const loaded = getBookings();
+    const idx = loaded.findIndex(b => b.id === bookingId);
     if (idx !== -1) {
-      mockBookings[idx].status = "confirmed";
-      setBookings([...mockBookings]);
+      loaded[idx].status = "confirmed";
+      setBookings(loaded);
+      setBookingsState([...loaded]);
     }
   };
 
