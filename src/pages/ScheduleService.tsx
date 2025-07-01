@@ -11,6 +11,17 @@ const mockAgenda = [
 // Mock de bookings (simulação em memória)
 let mockBookings: ServiceRequest[] = [];
 
+// Funções utilitárias para persistência
+const BOOKINGS_KEY = "ibraids_bookings";
+function getBookings(): ServiceRequest[] {
+  const data = localStorage.getItem(BOOKINGS_KEY);
+  if (data) return JSON.parse(data);
+  return [];
+}
+function setBookings(bookings: ServiceRequest[]) {
+  localStorage.setItem(BOOKINGS_KEY, JSON.stringify(bookings));
+}
+
 const ScheduleService: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -33,7 +44,6 @@ const ScheduleService: React.FC = () => {
 
   const handleConfirm = () => {
     if (selectedDate && selectedSlot && service && entrepreneur) {
-      // Criar novo booking
       const newBooking: ServiceRequest = {
         id: `booking_${Date.now()}`,
         consumerId: "2", // Simulado, idealmente viria do contexto do usuário logado
@@ -45,11 +55,12 @@ const ScheduleService: React.FC = () => {
         totalPrice: service.price,
         createdAt: new Date().toISOString(),
       };
-      mockBookings.push(newBooking);
+      // Persistir no localStorage
+      const bookings = getBookings();
+      bookings.push(newBooking);
+      setBookings(bookings);
       setBookingId(newBooking.id);
       setConfirmed(true);
-      // (Opcional) Salvar no localStorage
-      // localStorage.setItem("mockBookings", JSON.stringify(mockBookings));
     }
   };
 
