@@ -17,14 +17,38 @@ const ServicesHistory: React.FC = () => {
   useEffect(() => {
     // Aqui você pode buscar do localStorage ou API futuramente
     setBookings([...mockBookings]);
-    // Notificações de agendamento próximo
     const now = new Date();
-    const upcoming = mockBookings.filter(b => {
+    const notifs: string[] = [];
+    mockBookings.forEach(b => {
       const sched = new Date(b.scheduledDate);
-      return sched > now && (sched.getTime() - now.getTime()) < 24 * 60 * 60 * 1000;
+      const diffMs = sched.getTime() - now.getTime();
+      // Verifica quando o booking foi criado
+      const created = new Date(b.createdAt);
+      const createdDiff = sched.getTime() - created.getTime();
+      // Notificação 24h antes: só se o agendamento foi feito com mais de 24h de antecedência
+      if (createdDiff > 24 * 60 * 60 * 1000 && sched > now && diffMs < 24 * 60 * 60 * 1000 && diffMs > 60 * 60 * 1000) {
+        notifs.push(`Você tem um serviço agendado para ${sched.toLocaleString()}`);
+      }
+      // Notificação 1h antes: sempre se confirmado e dentro da janela
+      if (b.status === "confirmed" && sched > now && diffMs < 60 * 60 * 1000 && diffMs > 0) {
+        notifs.push(`Lembrete: seu serviço confirmado começa em menos de 1 hora (${sched.toLocaleString()})`);
+      }
+      // Se o agendamento foi feito com menos de 24h de antecedência, só notifica 1h antes (se confirmado)
+      if (createdDiff <= 24 * 60 * 60 * 1000 && b.status === "confirmed" && sched > now && diffMs < 60 * 60 * 1000 && diffMs > 0) {
+        // Já está coberto pela regra acima
+      }
     });
-    setNotifications(upcoming.map(b => `Você tem um serviço agendado para ${new Date(b.scheduledDate).toLocaleString()}`));
+    setNotifications(notifs);
   }, []);
+
+  const handleConfirm = (bookingId: string) => {
+    // Atualiza status para 'confirmed'
+    const idx = mockBookings.findIndex(b => b.id === bookingId);
+    if (idx !== -1) {
+      mockBookings[idx].status = "confirmed";
+      setBookings([...mockBookings]);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white p-4">
@@ -54,6 +78,9 @@ const ServicesHistory: React.FC = () => {
                 <div className="text-xs text-gray-500">Data: {new Date(b.scheduledDate).toLocaleString()}</div>
                 <div className="text-xs text-gray-500">Status: <b>{b.status}</b></div>
               </div>
+              {b.status === "pending" && (
+                <button className="bg-blue-600 text-white px-4 py-2 rounded font-bold" onClick={() => handleConfirm(b.id)}>Confirmar Presença</button>
+              )}
               {b.status === "completed" && !b.review && (
                 <button className="bg-green-600 text-white px-4 py-2 rounded font-bold">Avaliar</button>
               )}
