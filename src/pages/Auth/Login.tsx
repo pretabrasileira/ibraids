@@ -2,14 +2,14 @@
 
 import type React from "react"
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useAuth } from "../../contexts/AuthContext"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2 } from "lucide-react"
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState("")
@@ -19,7 +19,7 @@ export const Login: React.FC = () => {
   const [error, setError] = useState("")
 
   const { login } = useAuth()
-  const navigate = useNavigate()
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -27,8 +27,15 @@ export const Login: React.FC = () => {
     setError("")
 
     try {
-      await login({ email, password, rememberMe })
-      navigate("/dashboard")
+      const response = await login({ email, password, rememberMe })
+      const user = response.user
+      if (user.role === "admin") {
+        router.push("/dashboard/admin")
+      } else if (user.role === "entrepreneur") {
+        router.push("/dashboard/entrepreneur")
+      } else {
+        router.push("/dashboard/consumer")
+      }
     } catch (err) {
       setError("Email ou senha inválidos")
     } finally {
@@ -83,13 +90,13 @@ export const Login: React.FC = () => {
                 <Checkbox
                   id="remember"
                   checked={rememberMe}
-                  onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                  onCheckedChange={(checked: boolean | undefined) => setRememberMe(!!checked)}
                 />
                 <label htmlFor="remember" className="text-sm text-gray-600">
                   Lembrar-me
                 </label>
               </div>
-              <Link to="/forgot-password" className="text-sm text-red-600 hover:text-red-500">
+              <Link href="/forgot-password" className="text-sm text-red-600 hover:text-red-500">
                 Esqueci minha senha
               </Link>
             </div>
@@ -100,10 +107,7 @@ export const Login: React.FC = () => {
               className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Entrando...
-                </>
+                <>Entrando...</>
               ) : (
                 "Entrar"
               )}
@@ -111,7 +115,7 @@ export const Login: React.FC = () => {
 
             <div className="text-center">
               <span className="text-gray-600">Não tem uma conta? </span>
-              <Link to="/register-type" className="text-red-600 hover:text-red-500 font-medium">
+              <Link href="/register-type" className="text-red-600 hover:text-red-500 font-medium">
                 Cadastre-se
               </Link>
             </div>
