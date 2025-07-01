@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "consumerId": "2",
+    "entrepreneurId": "1",
+    "serviceId": "1",
+    "status": "completed",
+    "scheduledDate": "2024-12-25T14:00:00",
+    "location": {
+      "lat": -23.5505,
+      "lng": -46.6333,
+      "address": "Rua das Palmeiras, 789",
+      "city": "São Paulo",
+      "state": "SP",
+      "zipCode": "01234-567"
+    },
+    "totalPrice": 150.0,
+    "rating": 5,
+    "review": "Excelente trabalho! Muito profissional.",
+    "createdAt": "2024-12-20"
+  }
+] 

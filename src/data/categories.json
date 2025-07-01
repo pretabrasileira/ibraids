@@ -1,0 +1,9 @@
+[
+  { "id": "1", "name": "Cabelo", "icon": "💇‍♀️", "color": "#c6701a", "isActive": true },
+  { "id": "2", "name": "Pele", "icon": "✨", "color": "#7f2317", "isActive": true },
+  { "id": "3", "name": "Maquiagem", "icon": "💄", "color": "#3f6239", "isActive": true },
+  { "id": "4", "name": "Spa", "icon": "🧖‍♀️", "color": "#c6701a", "isActive": true },
+  { "id": "5", "name": "Manicure", "icon": "💅", "color": "#7f2317", "isActive": true },
+  { "id": "6", "name": "Pedicure", "icon": "🦶", "color": "#3f6239", "isActive": true },
+  { "id": "7", "name": "Cílios", "icon": "👁️", "color": "#c6701a", "isActive": true }
+] 

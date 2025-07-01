@@ -1,0 +1,657 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+Desenvolva uma plataforma completa chamada ibraids em React + TypeScript que seja compatível com Capacitor para conversão em aplicativo mobile (iOS/Android). A plataforma deve ser um marketplace de serviços de beleza que conecta empreendedores e consumidores.
+Tecnologias Obrigatórias
+
+Frontend: React 18+ com TypeScript
+Styling: Tailwind CSS (apenas classes core/pré-definidas)
+Mobile: Preparado para Capacitor
+Autenticação: JWT Bearer Token
+APIs: Simuladas com arquivos JSON (preparar para futuras APIs .NET Core)
+Routing: React Router DOM
+
+Design System e Interface
+Paleta de Cores
+
+Primária: Branco (#FFFFFF) - cor predominante
+Secundária: Marrom (#8B4513) ou Vermelho (#DC143C) - fontes, botões, elementos visuais
+Alertas: Cores padrão
+
+Sucesso: Verde claro (#90EE90)
+Aviso: Amarelo claro (#FFFFE0)
+Erro: Vermelho claro (#FFB6C1)
+Info: Azul claro (#ADD8E6)
+
+
+Dashboard: Cores intensas e agradáveis para caixas e big numbers
+
+Princípios de Design
+
+Interface clean e moderna
+Design mobile-first responsivo
+Navegação intuitiva entre telas
+Todos os links e botões funcionais
+Componentes reutilizáveis
+
+Arquitetura e Estrutura de Dados
+Contratos TypeScript (Interfaces)
+typescriptinterface User {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  document: string; // CPF/CNPJ com máscara
+  birthDate: string;
+  userType: 'entrepreneur' | 'consumer' | 'admin';
+  isActive: boolean;
+  createdAt: string;
+  addresses?: Address[];
+  bankAccount?: BankAccount;
+  points: number;
+  biometryCompleted?: boolean;
+}
+
+interface Address {
+  id: string;
+  userId: string;
+  street: string;
+  number: string;
+  complement?: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  coordinates: { lat: number; lng: number };
+  isMain: boolean;
+}
+
+interface Service {
+  id: string;
+  entrepreneurId: string;
+  title: string;
+  description: string;
+  category: ServiceCategory;
+  price: number;
+  duration: number; // em minutos
+  rating: number;
+  completedServices: number;
+  isActive: boolean;
+  isSponsored: boolean;
+  images: string[];
+}
+
+interface ServiceCategory {
+  id: string;
+  name: string;
+  icon: string;
+  description: string;
+}
+
+interface Booking {
+  id: string;
+  serviceId: string;
+  consumerId: string;
+  entrepreneurId: string;
+  scheduledDate: string;
+  status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
+  address: Address;
+  totalAmount: number;
+  paymentMethod: string;
+  rating?: number;
+  review?: string;
+  estimatedDuration: number;
+  travelTime: number;
+}
+
+interface Review {
+  id: string;
+  bookingId: string;
+  rating: number;
+  comment?: string;
+  createdAt: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  images: string[];
+  inStock: boolean;
+}
+
+interface Course {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  duration: string;
+  instructor: string;
+  isFree: boolean;
+  category: string;
+  thumbnail: string;
+}
+
+interface PaymentMethod {
+  id: string;
+  userId: string;
+  type: 'credit' | 'debit';
+  lastFourDigits: string;
+  brand: string;
+  expiryDate: string;
+}
+
+interface DashboardMetrics {
+  totalUsers: number;
+  activeUsers: number;
+  loggedUsers: number;
+  deactivatedUsers: number;
+  monthlyRevenue: number;
+  semestralRevenue: number;
+  yearlyRevenue: number;
+}
+Dados Mock (JSON)
+Crie arquivos JSON na pasta /src/data/ com dados simulados:
+
+users.json - usuários dos 3 perfis
+services.json - serviços oferecidos
+categories.json - categorias de serviços
+bookings.json - agendamentos
+products.json - produtos para venda
+courses.json - cursos disponíveis
+reviews.json - avaliações
+dashboardMetrics.json - métricas do dashboard
+
+Perfis de Usuários e Funcionalidades
+1. Sistema de Autenticação
+Tela de Login (/login)
+
+Campo email
+Campo senha
+Checkbox "Lembrar-me"
+Botão "Entrar"
+Link "Cadastre-se" → redireciona para /register
+Link "Recuperar senha" → redireciona para /forgot-password
+
+Tela de Seleção de Cadastro (/register)
+
+Dois botões grandes:
+
+"Sou empreendedor" → /register/entrepreneur
+"Sou cliente" → /register/consumer
+
+
+
+Telas de Cadastro
+Campos obrigatórios para todos:
+
+Nome completo
+Data de nascimento (date picker)
+CPF/CNPJ (com máscara automática)
+Email
+Celular (com máscara)
+Senha
+Confirmar senha
+
+Específico para Empreendedores (/register/entrepreneur):
+
+Checkbox para CNPJ (altera máscara do documento)
+Campo especialidades (multi-select de categorias)
+
+2. Dashboard do Empreendedor (/entrepreneur/dashboard)
+Métricas Principais (Cards superiores)
+
+Atendimentos da semana
+Atendimentos do dia
+Recebíveis do mês
+Próximos agendamentos
+
+Botão Destaque
+
+Botão vermelho grande: "Cadastrar Novo Anúncio" → /entrepreneur/services/new
+
+Menu Lateral/Navegação
+
+Meu Perfil (/entrepreneur/profile)
+
+Dados pessoais
+Realizar biometria
+Cadastrar endereços
+Upload de documentos
+
+
+Meus Serviços (/entrepreneur/services)
+
+Lista de serviços
+Cadastrar novo serviço
+Editar/ativar/desativar
+
+
+Conta Bancária (/entrepreneur/banking)
+
+Dados bancários
+Histórico de recebimentos
+
+
+Pontos Acumulados (/entrepreneur/points)
+
+Saldo de pontos
+Histórico de pontuação
+
+
+Meus Cursos (/entrepreneur/courses)
+
+"Em breve" (placeholder)
+
+
+Relatórios (/entrepreneur/reports)
+
+Relatórios de atendimentos
+Financeiro
+
+
+
+Seção Inferior
+
+Lista de "Serviços Pendentes de Avaliação"
+Card para cada serviço com botão "Solicitar Avaliação"
+
+3. Dashboard do Consumidor (/consumer/dashboard)
+Campo de Busca (Topo)
+
+Input de busca: "Busque por serviços..."
+Botão de busca
+
+Categorias (Grid)
+Cards clicáveis com ícones:
+
+Cabelo
+Pele
+Maquiagem
+Spa
+Manicure
+Pedicure
+Cílios
+
+Menu Lateral/Navegação
+
+Meu Perfil (/consumer/profile)
+
+Dados pessoais
+Cadastrar endereços (com mapa)
+
+
+Serviços (/consumer/services)
+
+Histórico de serviços contratados
+
+
+Pagamentos (/consumer/payments)
+
+Métodos de pagamento
+Histórico de transações
+
+
+Pontos (/consumer/points)
+
+Saldo de pontos
+Trocar por descontos
+
+
+
+Seção Inferior
+
+"Serviços Pendentes de Avaliação"
+Formulário de avaliação (estrelas + comentário)
+
+4. Dashboard do Administrador (/admin/dashboard)
+Métricas (Big Numbers)
+Usuários:
+
+Empreendedores ativos
+Consumidores ativos
+Usuários logados hoje
+Usuários descadastrados (último mês)
+
+Financeiro:
+
+Faturamento mensal
+Faturamento semestral
+Faturamento anual
+
+Menu Lateral/Navegação
+
+Usuários (/admin/users)
+
+Cadastrar usuários (todos os perfis)
+Listar/editar usuários
+
+
+Categorias (/admin/categories)
+
+Cadastrar/editar categorias de serviços
+
+
+Produtos (/admin/products)
+
+Cadastrar produtos para venda
+
+
+Anúncios (/admin/ads)
+
+Cadastrar banners
+Links patrocinados
+
+
+Cursos (/admin/courses)
+
+Cadastrar/gerenciar cursos
+
+
+Sistema (/admin/settings)
+
+Configurações de módulos
+Configurações de banco
+Configurações de IA
+Configurações de SMS/Email
+
+
+
+5. Sistema de Busca e Marketplace
+Busca de Serviços (/search)
+Funcionalidades:
+
+Busca por texto
+Filtros por categoria
+Filtro por faixa de preço
+Filtro por distância
+Filtro por avaliação
+
+Algoritmo de Ranking (ordem de exibição):
+
+Serviços patrocinados (badge "Patrocinado")
+Mais próximos geograficamente
+Melhor avaliação
+Mais atendimentos realizados
+
+Card do Empreendedor
+Informações exibidas:
+
+Nome do empreendedor
+Foto de perfil
+Avaliação (estrelas + número)
+Distância da localização atual
+Quantidade de serviços prestados
+Descrição do serviço
+Valor do serviço
+Tempo médio de execução
+Tempo estimado de chegada
+Classificação de preço: $ (barato), $$ (padrão), $$$ (caro)
+Botão "Contratar Serviço"
+
+Marketplace do Empreendedor (/marketplace/entrepreneur)
+Seções:
+
+Produtos - Grid de produtos disponíveis
+Cursos - Lista de cursos (pagos e gratuitos)
+Carrinho - Itens selecionados
+Pagamento - Cartão, boleto, PIX, créditos
+
+Marketplace do Consumidor (/marketplace/consumer)
+
+Apenas exibição de serviços de empreendedores
+Mesmo layout da busca de serviços
+Foco em contratação de serviços
+
+6. Sistema de Pagamentos
+Cadastro de Cartões (/payment/cards)
+
+Número do cartão (com máscara)
+Nome no cartão
+Data de vencimento
+CVV
+Salvar cartão (checkbox)
+
+Métodos de Pagamento
+
+Cartão de crédito (parcelamento até 12x)
+Cartão de débito
+PIX (QR Code simulado)
+Boleto bancário (código simulado)
+Créditos da plataforma
+
+Tela de Pagamento (/payment)
+
+Resumo do pedido
+Seleção de método de pagamento
+Aplicação de desconto (pontos)
+Finalizar compra
+
+7. Sistema de Avaliações e Pontos
+Avaliação de Serviços
+
+Sistema de 1 a 5 estrelas
+Campo de comentário opcional
+Botão "Enviar Avaliação"
+
+Sistema de Pontos
+Para Consumidores:
+
++10 pontos por avaliação
++5 pontos por cada R$ 10 gastos
+Trocar pontos por descontos (100 pontos = R$ 5)
+
+Para Empreendedores:
+
++20 pontos por serviço completado
++50 pontos por avaliação 5 estrelas
+Melhoria no ranking baseado em pontos
+
+8. Funcionalidades Especiais
+Geolocalização
+
+Cadastro de endereços com coordenadas
+Cálculo de distância entre consumidor e empreendedor
+Mapa interativo (pode usar componente simulado)
+
+Notificações
+
+Sistema de notificações in-app
+Badge com contador de notificações não lidas
+
+Upload de Arquivos
+
+Upload de foto de perfil
+Upload de documentos
+Upload de fotos de serviços
+Componente de drag-and-drop
+
+9. Estrutura de Pastas
+src/
+├── components/
+│   ├── common/
+│   │   ├── Header.tsx
+│   │   ├── Footer.tsx
+│   │   ├── Layout.tsx
+│   │   ├── LoadingSpinner.tsx
+│   │   └── Modal.tsx
+│   ├── forms/
+│   │   ├── LoginForm.tsx
+│   │   ├── RegisterForm.tsx
+│   │   └── PaymentForm.tsx
+│   ├── cards/
+│   │   ├── ServiceCard.tsx
+│   │   ├── EntrepreneurCard.tsx
+│   │   └── MetricCard.tsx
+│   └── navigation/
+│       ├── Sidebar.tsx
+│       └── TabBar.tsx
+├── pages/
+│   ├── auth/
+│   ├── entrepreneur/
+│   ├── consumer/
+│   ├── admin/
+│   └── shared/
+├── hooks/
+│   ├── useAuth.tsx
+│   ├── useGeolocation.tsx
+│   └── useApi.tsx
+├── services/
+│   ├── authService.ts
+│   ├── apiService.ts
+│   └── storageService.ts
+├── data/
+│   ├── users.json
+│   ├── services.json
+│   └── [outros arquivos mock]
+├── contexts/
+│   ├── AuthContext.tsx
+│   └── AppContext.tsx
+├── types/
+│   └── index.ts
+└── utils/
+    ├── validators.ts
+    ├── formatters.ts
+    └── constants.ts
+10. Funcionalidades Obrigatórias
+Máscaras de Input
+
+CPF: 000.000.000-00
+CNPJ: 00.000.000/0000-00
+Telefone: (00) 00000-0000
+CEP: 00000-000
+Cartão: 0000 0000 0000 0000
+
+Validações
+
+Email válido
+CPF/CNPJ válido
+Campos obrigatórios
+Senha forte (mínimo 8 caracteres)
+Data de nascimento (maior de 16 anos)
+
+Responsividade
+
+Design mobile-first
+Breakpoints: sm (640px), md (768px), lg (1024px), xl (1280px)
+Componentes adaptativos
+Menu responsivo (hambúrguer no mobile)
+
+Estados de Loading
+
+Spinners em requisições
+Skeleton loading para listas
+Estados de erro
+Estados vazios (empty states)
+
+11. Rotas da Aplicação
+typescript// Rotas públicas
+/login
+/register
+/register/entrepreneur
+/register/consumer
+/forgot-password
+
+// Rotas do empreendedor
+/entrepreneur/dashboard
+/entrepreneur/profile
+/entrepreneur/services
+/entrepreneur/services/new
+/entrepreneur/services/:id/edit
+/entrepreneur/banking
+/entrepreneur/points
+/entrepreneur/courses
+/entrepreneur/reports
+
+// Rotas do consumidor  
+/consumer/dashboard
+/consumer/profile
+/consumer/services
+/consumer/payments
+/consumer/points
+
+// Rotas do admin
+/admin/dashboard
+/admin/users
+/admin/categories
+/admin/products
+/admin/ads
+/admin/courses
+/admin/settings
+
+// Rotas compartilhadas
+/search
+/marketplace/entrepreneur
+/marketplace/consumer
+/service/:id
+/entrepreneur/:id
+/payment
+/payment/success
+/payment/error
+12. Implementação de Autenticação
+JWT Mock
+typescriptconst mockAuth = {
+  login: async (email: string, password: string) => {
+    // Simular validação com dados do JSON
+    const token = btoa(JSON.stringify({ email, exp: Date.now() + 3600000 }));
+    localStorage.setItem('token', token);
+    return { token, user: mockUser };
+  },
+  
+  logout: () => {
+    localStorage.removeItem('token');
+  },
+  
+  isAuthenticated: () => {
+    const token = localStorage.getItem('token');
+    if (!token) return false;
+    
+    try {
+      const decoded = JSON.parse(atob(token));
+      return decoded.exp > Date.now();
+    } catch {
+      return false;
+    }
+  }
+};
+Context de Autenticação
+
+Estado global do usuário logado
+Funções de login/logout
+Proteção de rotas
+Redirecionamento baseado no perfil
+
+13. Requisitos de Performance
+
+Lazy loading de componentes
+Otimização de imagens
+Debounce em campos de busca
+Paginação em listas grandes
+Cache de dados frequentes
+
+14. Acessibilidade
+
+Semântica HTML correta
+Aria-labels em botões e inputs
+Contraste adequado
+Navegação por teclado
+Screen reader friendly
+
+15. Próximos Passos de Desenvolvimento
+
+Setup inicial: Configurar projeto React + TypeScript + Tailwind
+Autenticação: Implementar sistema de login/cadastro
+Dashboards: Criar dashboards para cada perfil
+Busca e marketplace: Sistema de busca e listagem
+Pagamentos: Telas de pagamento (mock)
+Avaliações: Sistema de review e pontos
+Responsividade: Otimizar para mobile
+Testes: Implementar testes unitários
+Deploy: Preparar para produção
+
+
+Importante: Todos os links devem ser funcionais, todas as telas navegáveis, e todos os dados devem vir dos arquivos JSON mock. A plataforma deve estar 100% funcional mesmo sem backend real, preparada para futuras integrações com APIs .NET Core.
