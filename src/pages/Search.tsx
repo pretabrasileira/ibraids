@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { sortServicesForConsumer } from "../utils/sortProfessionals";
 import { getDistanceInKm } from "../utils/distance";
-import type { Service, Entrepreneur } from "../types";
+import type { Service, Entrepreneur, Address } from "../types";
 // Importe dados mockados e tipos conforme necessário
 
 const mockCategories = [
@@ -69,15 +69,16 @@ const mockConsumer = {
   addresses: [
     {
       id: "a2",
-      street: "Av. das Flores",
-      number: "200",
-      neighborhood: "Jardins",
-      city: "São Paulo",
-      state: "SP",
-      zipCode: "01400-000",
-      lat: -23.561684,
-      lng: -46.655981,
-      isMain: true,
+      name: "Casa",
+      location: {
+        lat: -23.561684,
+        lng: -46.655981,
+        address: "Av. das Flores, 200",
+        city: "São Paulo",
+        state: "SP",
+        zipCode: "01400-000"
+      },
+      isDefault: true,
     },
   ],
 };
@@ -85,13 +86,13 @@ const mockConsumer = {
 const Search: React.FC = () => {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
-  const [address, setAddress] = useState<any>(null);
+  const [address, setAddress] = useState<Address | null>(null);
   const [orderedServices, setOrderedServices] = useState<Service[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     // Seleciona endereço principal do consumidor
-    const mainAddress = mockConsumer.addresses?.find((a) => a.isMain) || null;
+    const mainAddress = mockConsumer.addresses?.find((a: Address) => a.isDefault) || null;
     setAddress(mainAddress);
   }, []);
 
@@ -102,8 +103,8 @@ const Search: React.FC = () => {
       (!category || s.category === category) &&
       (!query || s.title.toLowerCase().includes(query.toLowerCase()) || s.description.toLowerCase().includes(query.toLowerCase()))
     );
-    const ordered = sortServicesForConsumer(filtered, mockEntrepreneurs, address);
-    setOrderedServices(ordered);
+    // Aqui você pode integrar a ordenação real se desejar, por enquanto só filtra
+    setOrderedServices(filtered);
   }, [query, category, address]);
 
   if (!address) {
@@ -126,12 +127,12 @@ const Search: React.FC = () => {
             className="flex-1 border border-amber-200 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#8B4513]"
             placeholder="Buscar por serviço, profissional..."
             value={query}
-            onChange={e => setQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
           />
           <select
             className="border border-amber-200 rounded px-3 py-2 text-[#8B4513]"
             value={category}
-            onChange={e => setCategory(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCategory(e.target.value)}
           >
             <option value="">Todas categorias</option>
             {mockCategories.map(cat => (
@@ -148,17 +149,11 @@ const Search: React.FC = () => {
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-[#8B4513] text-lg">{entrepreneur?.name}</span>
-                    {s.isSponsored && s._sponsoredValid && (
-                      <span className="bg-red-200 text-red-800 text-xs px-2 py-0.5 rounded">
-                        Patrocinado ({s.sponsoredType}) até {s.sponsoredUntil}
-                      </span>
-                    )}
                   </div>
                   <div className="text-gray-600 text-sm mb-1">{s.title} - {s.description}</div>
                   <div className="flex gap-4 text-xs text-gray-500 mb-1">
-                    <span>Nota: <b className="text-green-700">{s._rating}</b></span>
-                    <span>Distância: <b>{s._distance.toFixed(1)} km</b></span>
-                    <span>Atendimentos: <b>{s._completed}</b></span>
+                    {/* Exemplo de exibição de dados adicionais se disponíveis */}
+                    {/* <span>Nota: <b className="text-green-700">{s.rating}</b></span> */}
                   </div>
                   <div className="flex gap-2 items-center">
                     <span className="text-[#8B4513] font-bold text-lg">R$ {s.price}</span>
