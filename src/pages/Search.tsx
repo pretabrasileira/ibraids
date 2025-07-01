@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { sortServicesForConsumer } from "../utils/sortProfessionals";
 import { getDistanceInKm } from "../utils/distance";
+import type { Service, Entrepreneur } from "../types";
 // Importe dados mockados e tipos conforme necessário
 
 const mockCategories = [
@@ -14,18 +15,30 @@ const mockCategories = [
   { id: "cilios", name: "Cílios" },
 ];
 
-const mockEntrepreneurs = [
+const mockEntrepreneurs: Entrepreneur[] = [
   {
     id: "1",
     name: "Maria Trancista",
-    rating: 4.9,
-    completedServices: 120,
-    addresses: [{ lat: -23.55052, lng: -46.633308 }],
+    email: "maria@email.com",
+    phone: "11999999999",
+    cpf: "000.000.000-00",
+    birthDate: "1990-01-01",
+    role: "entrepreneur",
     avatar: "/placeholder.svg?height=100&width=100",
+    isActive: true,
+    createdAt: "2024-01-01",
+    businessName: "Tranças da Maria",
+    cnpj: "00.000.000/0000-00",
+    rating: 4.9,
+    totalServices: 120,
+    isVerified: true,
+    categories: ["cabelo"],
+    location: { lat: -23.55052, lng: -46.633308, address: "Rua X", city: "São Paulo", state: "SP", zipCode: "00000-000" },
+    points: 200,
   },
 ];
 
-const mockServices = [
+const mockServices: Service[] = [
   {
     id: "1",
     entrepreneurId: "1",
@@ -33,9 +46,8 @@ const mockServices = [
     description: "Tranças box braids profissionais com cabelo sintético de alta qualidade",
     category: "cabelo",
     price: 150.0,
-    isSponsored: true,
-    sponsoredType: "mensal",
-    sponsoredUntil: "2024-07-31",
+    duration: 120,
+    isActive: true,
     images: ["/placeholder.svg?height=200&width=300"],
   },
   {
@@ -45,7 +57,8 @@ const mockServices = [
     description: "Tranças nagô tradicionais com técnica ancestral",
     category: "cabelo",
     price: 120.0,
-    isSponsored: false,
+    duration: 90,
+    isActive: true,
     images: ["/placeholder.svg?height=200&width=300"],
   },
 ];
@@ -73,7 +86,7 @@ const Search: React.FC = () => {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
   const [address, setAddress] = useState<any>(null);
-  const [orderedServices, setOrderedServices] = useState<any[]>([]);
+  const [orderedServices, setOrderedServices] = useState<Service[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -127,8 +140,8 @@ const Search: React.FC = () => {
           </select>
         </div>
         <div className="grid gap-4">
-          {orderedServices.map(s => {
-            const entrepreneur = mockEntrepreneurs.find(e => e.id === s.entrepreneurId);
+          {orderedServices.map((s: Service) => {
+            const entrepreneur = mockEntrepreneurs.find((e: Entrepreneur) => e.id === s.entrepreneurId);
             return (
               <div key={s.id} className="border border-amber-200 rounded-lg p-4 flex gap-4 bg-white shadow hover:shadow-lg transition cursor-pointer">
                 <img src={entrepreneur?.avatar} alt={entrepreneur?.name} className="h-20 w-20 rounded-full object-cover border-2 border-[#8B4513]" />
@@ -151,7 +164,7 @@ const Search: React.FC = () => {
                     <span className="text-[#8B4513] font-bold text-lg">R$ {s.price}</span>
                   </div>
                 </div>
-                <button className="bg-[#8B4513] text-white px-4 py-2 rounded hover:bg-[#6a2e0a] font-bold" onClick={() => navigate("/schedule-service")}>Ver Perfil</button>
+                <button className="bg-[#8B4513] text-white px-4 py-2 rounded hover:bg-[#6a2e0a] font-bold" onClick={() => entrepreneur && navigate("/schedule-service", { state: { service: s, entrepreneur } })}>Ver Perfil</button>
               </div>
             );
           })}

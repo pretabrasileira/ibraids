@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate, Location } from "react-router-dom";
+import type { Service, Entrepreneur } from "../types";
 
 // Mock de agenda disponível (normalmente viria da API ou do profissional)
 const mockAgenda = [
@@ -6,17 +8,19 @@ const mockAgenda = [
   { date: "2024-06-21", slots: ["10:00", "11:00", "13:00"] },
 ];
 
-const mockService = {
-  id: "1",
-  title: "Tranças Box Braids",
-  price: 150.0,
-  entrepreneur: {
-    name: "Maria Trancista",
-    avatar: "/placeholder.svg?height=100&width=100",
-  },
-};
-
 const ScheduleService: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const state = location.state as { service?: Service; entrepreneur?: Entrepreneur };
+  const service = state?.service;
+  const entrepreneur = state?.entrepreneur;
+
+  useEffect(() => {
+    if (!service || !entrepreneur) {
+      navigate("/search");
+    }
+  }, [service, entrepreneur, navigate]);
+
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedSlot, setSelectedSlot] = useState<string>("");
   const [confirmed, setConfirmed] = useState(false);
@@ -30,16 +34,26 @@ const ScheduleService: React.FC = () => {
     }
   };
 
+  if (!service || !entrepreneur) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white p-4">
+        <div className="bg-white border border-amber-200 rounded-lg p-8 shadow">
+          <h2 className="text-xl font-bold text-[#8B4513] mb-2">Selecione um serviço para agendar</h2>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-white p-4">
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 border border-amber-100">
         <h1 className="text-2xl font-bold text-[#8B4513] mb-2 text-center">Agendar Serviço</h1>
         <div className="flex items-center gap-4 mb-4">
-          <img src={mockService.entrepreneur.avatar} alt={mockService.entrepreneur.name} className="h-16 w-16 rounded-full border-2 border-[#8B4513]" />
+          <img src={entrepreneur.avatar} alt={entrepreneur.name} className="h-16 w-16 rounded-full border-2 border-[#8B4513]" />
           <div>
-            <div className="font-bold text-[#8B4513]">{mockService.entrepreneur.name}</div>
-            <div className="text-gray-700">{mockService.title}</div>
-            <div className="text-[#8B4513] font-bold">R$ {mockService.price}</div>
+            <div className="font-bold text-[#8B4513]">{entrepreneur.name}</div>
+            <div className="text-gray-700">{service.title}</div>
+            <div className="text-[#8B4513] font-bold">R$ {service.price}</div>
           </div>
         </div>
         <div className="mb-4">
