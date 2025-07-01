@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { sortServicesForConsumer } from "../utils/sortProfessionals";
 import { getDistanceInKm } from "../utils/distance";
 // Importe dados mockados e tipos conforme necessário
@@ -73,6 +74,7 @@ const Search: React.FC = () => {
   const [category, setCategory] = useState("");
   const [address, setAddress] = useState<any>(null);
   const [orderedServices, setOrderedServices] = useState<any[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Seleciona endereço principal do consumidor
@@ -149,7 +151,7 @@ const Search: React.FC = () => {
                     <span className="text-[#8B4513] font-bold text-lg">R$ {s.price}</span>
                   </div>
                 </div>
-                <button className="bg-[#8B4513] text-white px-4 py-2 rounded hover:bg-[#6a2e0a] font-bold">Ver Perfil</button>
+                <button className="bg-[#8B4513] text-white px-4 py-2 rounded hover:bg-[#6a2e0a] font-bold" onClick={() => navigate("/schedule-service")}>Ver Perfil</button>
               </div>
             );
           })}

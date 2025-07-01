@@ -39,6 +39,7 @@ import Ads from "./pages/admin/Ads";
 import AdminCourses from "./pages/admin/Courses";
 import AdminPoints from "./pages/admin/Points";
 import Settings from "./pages/admin/Settings";
+import ScheduleService from "./pages/ScheduleService";
 
 function App() {
   return (
@@ -255,6 +256,17 @@ function App() {
               <ProtectedRoute allowedRoles={["admin"]}>
                 <Layout>
                   <Settings />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/schedule-service"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <ScheduleService />
                 </Layout>
               </ProtectedRoute>
             }
