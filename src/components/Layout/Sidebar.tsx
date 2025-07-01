@@ -28,6 +28,8 @@ const entrepreneurMenuItems = [
   { to: "/courses", icon: BookOpen, label: "Meus Cursos" },
   { to: "/reports", icon: BarChart3, label: "Relatórios" },
   { to: "/marketplace", icon: ShoppingBag, label: "Marketplace" },
+  { to: "/entrepreneur/evaluate-clients", icon: Star, label: "Avaliar Clientes" },
+  { to: "/entrepreneur/reviews-history", icon: Star, label: "Avaliações Realizadas" },
 ]
 
 const consumerMenuItems = [
