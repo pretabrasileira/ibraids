@@ -58,17 +58,22 @@ export const Sidebar: React.FC = () => {
   const [pendingReviews, setPendingReviews] = useState<number>(0)
 
   useEffect(() => {
-    if (user?.role === "entrepreneur") {
-      const BOOKINGS_KEY = "ibraids_bookings"
-      const data = localStorage.getItem(BOOKINGS_KEY)
-      if (data) {
-        const bookings = JSON.parse(data)
-        const pendings = bookings.filter((b: any) => b.status === "completed" && (!b.entrepreneurRating || !b.entrepreneurReview))
-        setPendingReviews(pendings.length)
-      } else {
-        setPendingReviews(0)
+    function updatePendingReviews() {
+      if (user?.role === "entrepreneur") {
+        const BOOKINGS_KEY = "ibraids_bookings"
+        const data = localStorage.getItem(BOOKINGS_KEY)
+        if (data) {
+          const bookings = JSON.parse(data)
+          const pendings = bookings.filter((b: any) => b.status === "completed" && (!b.entrepreneurRating || !b.entrepreneurReview))
+          setPendingReviews(pendings.length)
+        } else {
+          setPendingReviews(0)
+        }
       }
     }
+    updatePendingReviews()
+    window.addEventListener("storage", updatePendingReviews)
+    return () => window.removeEventListener("storage", updatePendingReviews)
   }, [user])
 
   const getMenuItems = () => {
