@@ -193,3 +193,5 @@ export const EntrepreneurDashboard: React.FC = () => {
     </div>
   )
 }
+
+export default EntrepreneurDashboard;

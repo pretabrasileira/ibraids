@@ -54,3 +54,5 @@ export const RegisterType: React.FC = () => {
     </div>
   )
 }
+
+export default RegisterType;

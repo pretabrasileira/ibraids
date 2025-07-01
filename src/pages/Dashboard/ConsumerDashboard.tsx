@@ -224,3 +224,5 @@ export const ConsumerDashboard: React.FC = () => {
     </div>
   )
 }
+
+export default ConsumerDashboard;
