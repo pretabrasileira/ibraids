@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Location } from "react-router-dom";
-import type { Service, Entrepreneur } from "../types";
+import type { Service, Entrepreneur, ServiceRequest } from "../types";
 
 // Mock de agenda disponível (normalmente viria da API ou do profissional)
 const mockAgenda = [
   { date: "2024-06-20", slots: ["14:00", "15:00", "16:00"] },
   { date: "2024-06-21", slots: ["10:00", "11:00", "13:00"] },
 ];
+
+// Mock de bookings (simulação em memória)
+let mockBookings: ServiceRequest[] = [];
 
 const ScheduleService: React.FC = () => {
   const location = useLocation();
@@ -24,13 +27,29 @@ const ScheduleService: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedSlot, setSelectedSlot] = useState<string>("");
   const [confirmed, setConfirmed] = useState(false);
+  const [bookingId, setBookingId] = useState<string>("");
 
   const availableSlots = mockAgenda.find(a => a.date === selectedDate)?.slots || [];
 
   const handleConfirm = () => {
-    if (selectedDate && selectedSlot) {
+    if (selectedDate && selectedSlot && service && entrepreneur) {
+      // Criar novo booking
+      const newBooking: ServiceRequest = {
+        id: `booking_${Date.now()}`,
+        consumerId: "2", // Simulado, idealmente viria do contexto do usuário logado
+        entrepreneurId: entrepreneur.id,
+        serviceId: service.id,
+        status: "pending",
+        scheduledDate: `${selectedDate}T${selectedSlot}`,
+        location: entrepreneur.location,
+        totalPrice: service.price,
+        createdAt: new Date().toISOString(),
+      };
+      mockBookings.push(newBooking);
+      setBookingId(newBooking.id);
       setConfirmed(true);
-      // Aqui seria feita a chamada para salvar o agendamento
+      // (Opcional) Salvar no localStorage
+      // localStorage.setItem("mockBookings", JSON.stringify(mockBookings));
     }
   };
 
@@ -94,7 +113,10 @@ const ScheduleService: React.FC = () => {
           Confirmar Agendamento
         </button>
         {confirmed && (
-          <div className="bg-green-100 border border-green-200 text-green-700 rounded p-2 mt-4 text-sm text-center">Agendamento realizado com sucesso!</div>
+          <div className="bg-green-100 border border-green-200 text-green-700 rounded p-2 mt-4 text-sm text-center">
+            Agendamento realizado com sucesso!<br />
+            Código do agendamento: <b>{bookingId}</b>
+          </div>
         )}
       </div>
     </div>
