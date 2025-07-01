@@ -1,0 +1,90 @@
+import React, { useState } from "react";
+
+// Mock de agenda disponível (normalmente viria da API ou do profissional)
+const mockAgenda = [
+  { date: "2024-06-20", slots: ["14:00", "15:00", "16:00"] },
+  { date: "2024-06-21", slots: ["10:00", "11:00", "13:00"] },
+];
+
+const mockService = {
+  id: "1",
+  title: "Tranças Box Braids",
+  price: 150.0,
+  entrepreneur: {
+    name: "Maria Trancista",
+    avatar: "/placeholder.svg?height=100&width=100",
+  },
+};
+
+const ScheduleService: React.FC = () => {
+  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [selectedSlot, setSelectedSlot] = useState<string>("");
+  const [confirmed, setConfirmed] = useState(false);
+
+  const availableSlots = mockAgenda.find(a => a.date === selectedDate)?.slots || [];
+
+  const handleConfirm = () => {
+    if (selectedDate && selectedSlot) {
+      setConfirmed(true);
+      // Aqui seria feita a chamada para salvar o agendamento
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-white p-4">
+      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 border border-amber-100">
+        <h1 className="text-2xl font-bold text-[#8B4513] mb-2 text-center">Agendar Serviço</h1>
+        <div className="flex items-center gap-4 mb-4">
+          <img src={mockService.entrepreneur.avatar} alt={mockService.entrepreneur.name} className="h-16 w-16 rounded-full border-2 border-[#8B4513]" />
+          <div>
+            <div className="font-bold text-[#8B4513]">{mockService.entrepreneur.name}</div>
+            <div className="text-gray-700">{mockService.title}</div>
+            <div className="text-[#8B4513] font-bold">R$ {mockService.price}</div>
+          </div>
+        </div>
+        <div className="mb-4">
+          <label className="block text-[#8B4513] font-bold mb-1">Selecione a data:</label>
+          <select
+            className="w-full border border-amber-200 rounded px-3 py-2 mb-2"
+            value={selectedDate}
+            onChange={e => setSelectedDate(e.target.value)}
+          >
+            <option value="">Selecione</option>
+            {mockAgenda.map(a => (
+              <option key={a.date} value={a.date}>{a.date}</option>
+            ))}
+          </select>
+          {selectedDate && (
+            <>
+              <label className="block text-[#8B4513] font-bold mb-1">Horário disponível:</label>
+              <div className="flex gap-2 flex-wrap">
+                {availableSlots.map(slot => (
+                  <button
+                    key={slot}
+                    type="button"
+                    className={`px-4 py-2 rounded font-bold border ${selectedSlot === slot ? "bg-[#8B4513] text-white" : "bg-white text-[#8B4513] border-[#8B4513]"}`}
+                    onClick={() => setSelectedSlot(slot)}
+                  >
+                    {slot}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+        <button
+          className="w-full bg-[#8B4513] hover:bg-[#6a2e0a] text-white font-bold py-2 rounded transition mt-2"
+          disabled={!selectedDate || !selectedSlot}
+          onClick={handleConfirm}
+        >
+          Confirmar Agendamento
+        </button>
+        {confirmed && (
+          <div className="bg-green-100 border border-green-200 text-green-700 rounded p-2 mt-4 text-sm text-center">Agendamento realizado com sucesso!</div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ScheduleService; 

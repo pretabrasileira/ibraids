@@ -1,22 +1,38 @@
 [
   {
-    "id": "1",
+    "id": "b1",
+    "serviceId": "1",
     "consumerId": "2",
     "entrepreneurId": "1",
-    "serviceId": "1",
-    "status": "completed",
-    "scheduledDate": "2024-12-25T14:00:00",
-    "location": {
-      "lat": -23.5505,
-      "lng": -46.6333,
-      "address": "Rua das Palmeiras, 789",
+    "scheduledDate": "2024-06-20T14:00:00",
+    "status": "confirmed",
+    "address": {
+      "street": "Av. das Flores",
+      "number": "200",
+      "neighborhood": "Jardins",
       "city": "São Paulo",
       "state": "SP",
-      "zipCode": "01234-567"
+      "zipCode": "01400-000"
     },
-    "totalPrice": 150.0,
-    "rating": 5,
-    "review": "Excelente trabalho! Muito profissional.",
-    "createdAt": "2024-12-20"
+    "totalAmount": 150.0,
+    "paymentMethod": "credit"
+  },
+  {
+    "id": "b2",
+    "serviceId": "2",
+    "consumerId": "2",
+    "entrepreneurId": "1",
+    "scheduledDate": "2024-06-10T10:00:00",
+    "status": "completed",
+    "address": {
+      "street": "Av. das Flores",
+      "number": "200",
+      "neighborhood": "Jardins",
+      "city": "São Paulo",
+      "state": "SP",
+      "zipCode": "01400-000"
+    },
+    "totalAmount": 120.0,
+    "paymentMethod": "pix"
   }
 ] 
