@@ -2,13 +2,13 @@
 
 import type React from "react"
 import { useState } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom"
+import Link from "next/link"
+import { useRouter, useParams } from "next/navigation"
 import { useAuth } from "../../contexts/AuthContext"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2, ArrowLeft } from "lucide-react"
 
 export const Register: React.FC = () => {
   const { type } = useParams<{ type: "entrepreneur" | "consumer" }>()
@@ -25,7 +25,7 @@ export const Register: React.FC = () => {
   const [error, setError] = useState("")
 
   const { register } = useAuth()
-  const navigate = useNavigate()
+  const router = useRouter()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -62,7 +62,7 @@ export const Register: React.FC = () => {
         birthDate: formData.birthDate,
         role: type as "entrepreneur" | "consumer",
       })
-      navigate("/dashboard")
+      router.push("/dashboard")
     } catch (err) {
       setError("Erro ao criar conta. Tente novamente.")
     } finally {
@@ -174,18 +174,14 @@ export const Register: React.FC = () => {
               className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Criando conta...
-                </>
+                <>Criando conta...</>
               ) : (
                 "Criar Conta"
               )}
             </Button>
 
             <div className="text-center">
-              <Link to="/register-type" className="inline-flex items-center text-gray-600 hover:text-gray-500">
-                <ArrowLeft className="mr-1 h-4 w-4" />
+              <Link href="/register-type" className="inline-flex items-center text-gray-600 hover:text-gray-500">
                 Voltar
               </Link>
             </div>

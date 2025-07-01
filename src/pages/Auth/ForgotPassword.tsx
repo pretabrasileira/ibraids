@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,7 +51,7 @@ const ForgotPassword: React.FC = () => {
         </form>
         <button
           className="mt-6 w-full text-[#8B4513] hover:underline text-sm"
-          onClick={() => navigate("/login")}
+          onClick={() => router.push("/login")}
         >
           Voltar para o login
         </button>

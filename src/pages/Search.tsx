@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { sortServicesForConsumer } from "../utils/sortProfessionals";
 import { getDistanceInKm } from "../utils/distance";
 import type { Service, Entrepreneur, Address } from "../types";
@@ -88,7 +88,7 @@ const Search: React.FC = () => {
   const [category, setCategory] = useState("");
   const [address, setAddress] = useState<Address | null>(null);
   const [orderedServices, setOrderedServices] = useState<Service[]>([]);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     // Seleciona endereço principal do consumidor
@@ -159,7 +159,7 @@ const Search: React.FC = () => {
                     <span className="text-[#8B4513] font-bold text-lg">R$ {s.price}</span>
                   </div>
                 </div>
-                <button className="bg-[#8B4513] text-white px-4 py-2 rounded hover:bg-[#6a2e0a] font-bold" onClick={() => entrepreneur && navigate("/schedule-service", { state: { service: s, entrepreneur } })}>Ver Perfil</button>
+                <button className="bg-[#8B4513] text-white px-4 py-2 rounded hover:bg-[#6a2e0a] font-bold" onClick={() => entrepreneur && router.push(`/schedule-service?serviceId=${s.id}&entrepreneurId=${entrepreneur.id}`)}>Ver Perfil</button>
               </div>
             );
           })}

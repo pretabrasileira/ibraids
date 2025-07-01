@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate, Location } from "react-router-dom";
+import { useRouter, useSearchParams } from "next/navigation";
 import type { Service, Entrepreneur, ServiceRequest } from "../types";
 
 // Mock de agenda disponível (normalmente viria da API ou do profissional)
@@ -23,17 +23,22 @@ function setBookings(bookings: ServiceRequest[]) {
 }
 
 const ScheduleService: React.FC = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const state = location.state as { service?: Service; entrepreneur?: Entrepreneur };
-  const service = state?.service;
-  const entrepreneur = state?.entrepreneur;
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  // Simulação: buscar dados mockados pelo id recebido na query string
+  const serviceId = searchParams.get("serviceId");
+  const entrepreneurId = searchParams.get("entrepreneurId");
+  // Substitua pelos mocks reais do seu projeto
+  const mockServices: Service[] = [];
+  const mockEntrepreneurs: Entrepreneur[] = [];
+  const service = mockServices.find(s => s.id === serviceId);
+  const entrepreneur = mockEntrepreneurs.find(e => e.id === entrepreneurId);
 
   useEffect(() => {
     if (!service || !entrepreneur) {
-      navigate("/search");
+      router.push("/search");
     }
-  }, [service, entrepreneur, navigate]);
+  }, [service, entrepreneur, router]);
 
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedSlot, setSelectedSlot] = useState<string>("");

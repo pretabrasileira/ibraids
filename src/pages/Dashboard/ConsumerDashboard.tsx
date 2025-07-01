@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -86,7 +86,7 @@ export const ConsumerDashboard: React.FC = () => {
             {categories.map((category) => (
               <Link
                 key={category.id}
-                to={`/search?category=${category.id}`}
+                href={`/search?category=${category.id}`}
                 className="flex flex-col items-center p-4 rounded-lg border-2 border-gray-200 hover:border-red-300 hover:bg-red-50 transition-colors"
               >
                 <div
