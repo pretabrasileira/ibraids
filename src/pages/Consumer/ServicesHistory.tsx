@@ -21,6 +21,8 @@ const getService = (id: string): Service | undefined => mockServices.find(s => s
 const ServicesHistory: React.FC = () => {
   const [bookings, setBookingsState] = useState<ServiceRequest[]>([]);
   const [notifications, setNotifications] = useState<string[]>([]);
+  const [reviewingId, setReviewingId] = useState<string | null>(null);
+  const [reviewData, setReviewData] = useState<{ rating: number; comment: string }>({ rating: 5, comment: "" });
 
   useEffect(() => {
     const loaded = getBookings();
@@ -55,6 +57,27 @@ const ServicesHistory: React.FC = () => {
     }
   };
 
+  const handleStartReview = (bookingId: string) => {
+    setReviewingId(bookingId);
+    setReviewData({ rating: 5, comment: "" });
+  };
+
+  const handleReviewChange = (field: "rating" | "comment", value: number | string) => {
+    setReviewData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmitReview = (bookingId: string) => {
+    const loaded = getBookings();
+    const idx = loaded.findIndex(b => b.id === bookingId);
+    if (idx !== -1) {
+      loaded[idx].review = reviewData.comment;
+      loaded[idx].rating = reviewData.rating;
+      setBookings(loaded);
+      setBookingsState([...loaded]);
+      setReviewingId(null);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white p-4">
       <h1 className="text-2xl font-bold text-[#8B4513] mb-4">Histórico de Serviços</h1>
@@ -82,12 +105,29 @@ const ServicesHistory: React.FC = () => {
                 <div className="text-gray-700">{service?.title}</div>
                 <div className="text-xs text-gray-500">Data: {new Date(b.scheduledDate).toLocaleString()}</div>
                 <div className="text-xs text-gray-500">Status: <b>{b.status}</b></div>
+                {b.review && (
+                  <div className="mt-2 text-green-700 text-sm">Avaliação enviada: {b.rating} estrelas<br />"{b.review}"</div>
+                )}
               </div>
               {b.status === "pending" && (
                 <button className="bg-blue-600 text-white px-4 py-2 rounded font-bold" onClick={() => handleConfirm(b.id)}>Confirmar Presença</button>
               )}
-              {b.status === "completed" && !b.review && (
-                <button className="bg-green-600 text-white px-4 py-2 rounded font-bold">Avaliar</button>
+              {b.status === "completed" && !b.review && reviewingId !== b.id && (
+                <button className="bg-green-600 text-white px-4 py-2 rounded font-bold" onClick={() => handleStartReview(b.id)}>Avaliar</button>
+              )}
+              {b.status === "completed" && !b.review && reviewingId === b.id && (
+                <form className="flex flex-col gap-2 mt-2 bg-gray-50 p-2 rounded" onSubmit={e => { e.preventDefault(); handleSubmitReview(b.id); }}>
+                  <label className="font-bold text-[#8B4513]">Avaliação:</label>
+                  <div className="flex gap-1">
+                    {[1,2,3,4,5].map(star => (
+                      <button type="button" key={star} onClick={() => handleReviewChange("rating", star)} className={star <= reviewData.rating ? "text-yellow-500" : "text-gray-300"}>
+                        ★
+                      </button>
+                    ))}
+                  </div>
+                  <textarea className="border rounded p-1" placeholder="Comentário (opcional)" value={reviewData.comment} onChange={e => handleReviewChange("comment", e.target.value)} />
+                  <button type="submit" className="bg-[#8B4513] text-white px-3 py-1 rounded font-bold">Enviar Avaliação</button>
+                </form>
               )}
             </div>
           );
