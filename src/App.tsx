@@ -24,6 +24,22 @@ const PlaceholderPage: React.FC<{ title: string }> = ({ title }) => (
   </div>
 )
 
+import Profile from "./pages/Profile";
+import Services from "./pages/Services";
+import Search from "./pages/Search";
+import Marketplace from "./pages/Marketplace";
+import BankAccount from "./pages/BankAccount";
+import Points from "./pages/Points";
+import Courses from "./pages/Courses";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import Users from "./pages/admin/Users";
+import Categories from "./pages/admin/Categories";
+import Products from "./pages/admin/Products";
+import Ads from "./pages/admin/Ads";
+import AdminCourses from "./pages/admin/Courses";
+import AdminPoints from "./pages/admin/Points";
+import Settings from "./pages/admin/Settings";
+
 function App() {
   return (
     <AuthProvider>
@@ -51,7 +67,7 @@ function App() {
             element={
               <ProtectedRoute>
                 <Layout>
-                  <PlaceholderPage title="Meu Perfil" />
+                  <Profile />
                 </Layout>
               </ProtectedRoute>
             }
@@ -62,7 +78,7 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["entrepreneur"]}>
                 <Layout>
-                  <PlaceholderPage title="Meus Serviços" />
+                  <Services />
                 </Layout>
               </ProtectedRoute>
             }
@@ -73,7 +89,7 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["consumer"]}>
                 <Layout>
-                  <PlaceholderPage title="Buscar Serviços" />
+                  <Search />
                 </Layout>
               </ProtectedRoute>
             }
@@ -95,7 +111,7 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["entrepreneur"]}>
                 <Layout>
-                  <PlaceholderPage title="Conta Bancária" />
+                  <BankAccount />
                 </Layout>
               </ProtectedRoute>
             }
@@ -106,7 +122,7 @@ function App() {
             element={
               <ProtectedRoute>
                 <Layout>
-                  <PlaceholderPage title="Pontos Acumulados" />
+                  <Points />
                 </Layout>
               </ProtectedRoute>
             }
@@ -117,7 +133,7 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["entrepreneur"]}>
                 <Layout>
-                  <PlaceholderPage title="Meus Cursos" />
+                  <Courses />
                 </Layout>
               </ProtectedRoute>
             }
@@ -139,7 +155,7 @@ function App() {
             element={
               <ProtectedRoute>
                 <Layout>
-                  <PlaceholderPage title="Marketplace" />
+                  <Marketplace />
                 </Layout>
               </ProtectedRoute>
             }
@@ -157,77 +173,88 @@ function App() {
           />
 
           <Route
-            path="/users"
+            path="/admin/dashboard"
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <Layout>
-                  <PlaceholderPage title="Gerenciar Usuários" />
+                  <AdminDashboard />
                 </Layout>
               </ProtectedRoute>
             }
           />
 
           <Route
-            path="/categories"
+            path="/admin/users"
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <Layout>
-                  <PlaceholderPage title="Gerenciar Categorias" />
+                  <Users />
                 </Layout>
               </ProtectedRoute>
             }
           />
 
           <Route
-            path="/products"
+            path="/admin/categories"
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <Layout>
-                  <PlaceholderPage title="Gerenciar Produtos" />
+                  <Categories />
                 </Layout>
               </ProtectedRoute>
             }
           />
 
           <Route
-            path="/ads"
+            path="/admin/products"
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <Layout>
-                  <PlaceholderPage title="Gerenciar Anúncios" />
+                  <Products />
                 </Layout>
               </ProtectedRoute>
             }
           />
 
           <Route
-            path="/courses-admin"
+            path="/admin/ads"
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <Layout>
-                  <PlaceholderPage title="Gerenciar Cursos" />
+                  <Ads />
                 </Layout>
               </ProtectedRoute>
             }
           />
 
           <Route
-            path="/points-admin"
+            path="/admin/courses"
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <Layout>
-                  <PlaceholderPage title="Gerenciar Pontos" />
+                  <AdminCourses />
                 </Layout>
               </ProtectedRoute>
             }
           />
 
           <Route
-            path="/settings"
+            path="/admin/points"
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <Layout>
-                  <PlaceholderPage title="Configurações do Sistema" />
+                  <AdminPoints />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/settings"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <Layout>
+                  <Settings />
                 </Layout>
               </ProtectedRoute>
             }
