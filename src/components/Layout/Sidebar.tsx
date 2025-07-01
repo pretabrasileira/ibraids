@@ -1,8 +1,9 @@
 "use client"
 
 import type React from "react"
-import { NavLink } from "react-router-dom"
+import Link from "next/link"
 import { useAuth } from "../../contexts/AuthContext"
+import { usePathname } from "next/navigation"
 import {
   Home,
   User,
@@ -56,6 +57,7 @@ const adminMenuItems = [
 export const Sidebar: React.FC = () => {
   const { user } = useAuth()
   const [pendingReviews, setPendingReviews] = useState<number>(0)
+  const pathname = usePathname()
 
   useEffect(() => {
     function updatePendingReviews() {
@@ -95,28 +97,29 @@ export const Sidebar: React.FC = () => {
     <div className="bg-white w-64 min-h-screen shadow-sm border-r border-gray-200">
       <nav className="mt-8 px-4">
         <ul className="space-y-2">
-          {menuItems.map((item) => (
-            <li key={item.to} className="relative">
-              <NavLink
-                to={item.to}
-                className={({ isActive }) =>
-                  `flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+          {menuItems.map((item) => {
+            const isActive = pathname === item.to
+            return (
+              <li key={item.to} className="relative">
+                <Link
+                  href={item.to}
+                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
                     isActive
                       ? "bg-gradient-to-r from-orange-100 to-red-100 text-red-700 border-l-4 border-red-500"
                       : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                  }`
-                }
-              >
-                <item.icon className="mr-3 h-5 w-5" />
-                {item.label}
-                {user?.role === "entrepreneur" && item.to === "/entrepreneur/evaluate-clients" && pendingReviews > 0 && (
-                  <span className="ml-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
-                    {pendingReviews}
-                  </span>
-                )}
-              </NavLink>
-            </li>
-          ))}
+                  }`}
+                >
+                  <item.icon className="mr-3 h-5 w-5" />
+                  {item.label}
+                  {user?.role === "entrepreneur" && item.to === "/entrepreneur/evaluate-clients" && pendingReviews > 0 && (
+                    <span className="ml-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+                      {pendingReviews}
+                    </span>
+                  )}
+                </Link>
+              </li>
+            )
+          })}
         </ul>
       </nav>
     </div>

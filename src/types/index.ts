@@ -69,13 +69,15 @@ export interface ServiceRequest {
   consumerId: string
   entrepreneurId: string
   serviceId: string
-  status: "pending" | "accepted" | "in_progress" | "completed" | "cancelled"
+  status: "pending" | "accepted" | "in_progress" | "confirmed" | "completed" | "cancelled"
   scheduledDate: string
   location: Location
   totalPrice: number
   rating?: number
   review?: string
   createdAt: string
+  entrepreneurRating?: number
+  entrepreneurReview?: string
 }
 
 export interface Category {

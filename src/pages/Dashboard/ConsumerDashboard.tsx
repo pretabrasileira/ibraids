@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Search, MapPin, Star, Award, Clock, Heart } from "lucide-react"
-import { apiGet } from "@/services/apiService"
+import { apiGet } from "../../services/apiService"
 
 export const ConsumerDashboard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("")

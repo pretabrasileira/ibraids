@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import type { ServiceRequest, Entrepreneur, Service } from "../types";
+import type { ServiceRequest, Entrepreneur, Service } from "../../types";
 
 // Mock de bookings (importar do ScheduleService ou localStorage futuramente)
-import { mockEntrepreneurs, mockServices } from "../data/mocks"; // Ajuste o caminho conforme necessário
+import entrepreneurs from "../../data/users.json";
+import services from "../../data/services.json";
 
 // Funções utilitárias para persistência
 const BOOKINGS_KEY = "ibraids_bookings";
@@ -15,8 +16,9 @@ function setBookings(bookings: ServiceRequest[]) {
   localStorage.setItem(BOOKINGS_KEY, JSON.stringify(bookings));
 }
 
-const getEntrepreneur = (id: string): Entrepreneur | undefined => mockEntrepreneurs.find(e => e.id === id);
-const getService = (id: string): Service | undefined => mockServices.find(s => s.id === id);
+const getEntrepreneur = (id: string): Entrepreneur | undefined =>
+  (entrepreneurs as any[]).find((e) => e.id === id && e.role === "entrepreneur") as Entrepreneur | undefined;
+const getService = (id: string): Service | undefined => (services as Service[]).find((s) => s.id === id);
 
 const ServicesHistory: React.FC = () => {
   const [bookings, setBookingsState] = useState<ServiceRequest[]>([]);

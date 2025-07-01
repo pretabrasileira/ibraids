@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { DollarSign, Calendar, Star, TrendingUp, Clock, Users, Plus, Award } from "lucide-react"
-import { apiGet } from "@/services/apiService"
+import { apiGet } from "../../services/apiService"
 
 export const EntrepreneurDashboard: React.FC = () => {
   const [data, setData] = useState<any>(null)

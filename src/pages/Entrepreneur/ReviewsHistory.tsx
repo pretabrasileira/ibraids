@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import type { ServiceRequest, Consumer, Service } from "../types";
+import type { ServiceRequest, Consumer, Service } from "../../types";
 // Funções utilitárias para persistência
 const BOOKINGS_KEY = "ibraids_bookings";
 function getBookings(): ServiceRequest[] {
@@ -8,9 +8,11 @@ function getBookings(): ServiceRequest[] {
   return [];
 }
 // Mock de consumidores e serviços (ajuste conforme necessário)
-import { mockConsumers, mockServices } from "../data/mocks";
-const getConsumer = (id: string): Consumer | undefined => mockConsumers.find(c => c.id === id);
-const getService = (id: string): Service | undefined => mockServices.find(s => s.id === id);
+import consumers from "../../data/users.json";
+import services from "../../data/services.json";
+const getConsumer = (id: string): Consumer | undefined =>
+  (consumers as any[]).find((c) => c.id === id && c.role === "consumer") as Consumer | undefined;
+const getService = (id: string): Service | undefined => (services as Service[]).find((s) => s.id === id);
 
 const ReviewsHistory: React.FC = () => {
   const [reviews, setReviews] = useState<ServiceRequest[]>([]);

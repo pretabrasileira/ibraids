@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Users, UserCheck, DollarSign, TrendingUp, Calendar, BarChart3, Plus } from "lucide-react"
-import { apiGet } from "@/services/apiService"
+import { apiGet } from "../../services/apiService"
 
 export const AdminDashboard: React.FC = () => {
   const [data, setData] = useState<any>(null)
