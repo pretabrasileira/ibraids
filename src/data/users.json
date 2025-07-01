@@ -9,7 +9,21 @@
     "role": "entrepreneur",
     "avatar": "/placeholder.svg?height=100&width=100",
     "isActive": true,
-    "createdAt": "2024-01-15"
+    "createdAt": "2024-01-15",
+    "addresses": [
+      {
+        "id": "a1",
+        "street": "Rua das Tranças",
+        "number": "100",
+        "neighborhood": "Centro",
+        "city": "São Paulo",
+        "state": "SP",
+        "zipCode": "01000-000",
+        "lat": -23.55052,
+        "lng": -46.633308,
+        "isMain": true
+      }
+    ]
   },
   {
     "id": "2",
@@ -21,7 +35,21 @@
     "role": "consumer",
     "avatar": "/placeholder.svg?height=100&width=100",
     "isActive": true,
-    "createdAt": "2024-02-10"
+    "createdAt": "2024-02-10",
+    "addresses": [
+      {
+        "id": "a2",
+        "street": "Av. das Flores",
+        "number": "200",
+        "neighborhood": "Jardins",
+        "city": "São Paulo",
+        "state": "SP",
+        "zipCode": "01400-000",
+        "lat": -23.561684,
+        "lng": -46.655981,
+        "isMain": true
+      }
+    ]
   },
   {
     "id": "3",
