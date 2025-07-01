@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useGeolocation } from "../hooks/useGeolocation";
 
 interface Address {
   street: string;
@@ -25,9 +26,16 @@ const initialAddress: Address = {
 const AddressForm: React.FC = () => {
   const [address, setAddress] = useState<Address>(initialAddress);
   const [saved, setSaved] = useState(false);
+  const { location, loading, error } = useGeolocation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddress({ ...address, [e.target.name]: e.target.value });
+  };
+
+  const handleUseLocation = () => {
+    if (location) {
+      setAddress((prev) => ({ ...prev, lat: String(location.latitude), lng: String(location.longitude) }));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -50,10 +58,14 @@ const AddressForm: React.FC = () => {
           <input name="city" value={address.city} onChange={handleChange} placeholder="Cidade" required className="w-full border border-amber-200 rounded px-3 py-2" />
           <input name="state" value={address.state} onChange={handleChange} placeholder="Estado" required className="w-full border border-amber-200 rounded px-3 py-2" />
           <input name="zipCode" value={address.zipCode} onChange={handleChange} placeholder="CEP" required className="w-full border border-amber-200 rounded px-3 py-2" />
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <input name="lat" value={address.lat} onChange={handleChange} placeholder="Latitude (simulada)" required className="flex-1 border border-amber-200 rounded px-3 py-2" />
             <input name="lng" value={address.lng} onChange={handleChange} placeholder="Longitude (simulada)" required className="flex-1 border border-amber-200 rounded px-3 py-2" />
+            <button type="button" onClick={handleUseLocation} className="bg-[#8B4513] text-white px-2 py-1 rounded ml-2 text-xs hover:bg-[#6a2e0a]" disabled={loading}>
+              {loading ? "Obtendo..." : "Usar minha localização"}
+            </button>
           </div>
+          {error && <div className="text-red-600 text-xs">{error}</div>}
           <button type="submit" className="w-full bg-[#8B4513] hover:bg-[#6a2e0a] text-white font-bold py-2 rounded transition mt-2">Salvar Endereço</button>
         </form>
       </div>
